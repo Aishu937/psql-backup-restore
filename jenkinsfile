@@ -1,1 +1,19 @@
-
+pipeline {
+    agent {
+        label 'ansiblededicated'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                
+                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Aishu937/psql-backup-restore.git']])
+            
+            }
+        }
+        stage('Ansible Playbook Execution') {
+            steps {
+                sh 'ansible-playbook  $WORKSPACE/master.yml'
+            }
+        }
+    }
+}
