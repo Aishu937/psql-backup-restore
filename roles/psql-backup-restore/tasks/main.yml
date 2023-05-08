@@ -1,1 +1,78 @@
+---
+- name: Install PostgreSQL, take backup, and restore on another server
+  hosts: target_servers
+  vars:
+    db_name: "mydatabase"
+    db_user: "db_user"
+    db_password: "db_user"
+    backup_file: "/tmp/mydatabase.sql"
+    restore_file: "/tmp/mydatabase.sql"
+    restore_db_name: "databese_restored"
+    restore_db_user: "db_user2"
+    restore_db_password: "db_user"
+  tasks:
+    - name: Install PostgreSQL
+      become: true
+      apt:
+        name: postgresql
+        state: present
 
+    - name: Create database user and database
+      become: true
+      postgresql_user:
+        db: "{{ db_name }}"
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        login_user: postgres
+        login_password: postgres
+        login_host: target1@192.168.1.31
+        login_unix_socket: /var/run/postgresql
+      postgresql_db:
+        name: "{{ db_name }}"
+        owner: "{{ db_user }}"
+        login_user: postgres
+        login_password: postgres
+        login_host: target1@192.168.1.31
+        login_unix_socket: /var/run/postgresql
+
+    - name: Take database backup
+      become: true
+      postgresql_dump:
+        db: "{{ db_name }}"
+        login_user: "{{ db_user }}"
+        login_password: "{{ db_password }}"
+        login_host: target1@192.168.1.31
+        login_unix_socket: /var/run/postgresql
+        filename: "{{ backup_file }}"
+        
+    - name: Copy backup file to another server
+      become: true
+      copy:
+        src: "{{ backup_file }}"
+        dest: "{{ backup_file }}"
+        remote_src: true
+
+    - name: Restore database on another server
+      become: true
+      postgresql_user:
+        db: "{{ restore_db_name }}"
+        name: "{{ restore_db_user }}"
+        password: "{{ restore_db_password }}"
+        login_user: postgres
+        login_password: postgres
+        login_host: target1@192.168.1.31
+        login_unix_socket: /var/run/postgresql
+      postgresql_db:
+        name: "{{ restore_db_name }}"
+        owner: "{{ restore_db_user }}"
+        login_user: postgres
+        login_password: postgres
+        login_host: target1@192.168.1.31
+        login_unix_socket: /var/run/postgresql
+      postgresql_restore:
+        db: "{{ restore_db_name }}"
+        login_user: "{{ restore_db_user }}"
+        login_password: "{{ restore_db_password }}"
+        login_host: target1@192.168.1.31
+        login_unix_socket: /var/run/postgresql
+        filename: "{{ restore_file }}"
