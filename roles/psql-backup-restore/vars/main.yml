@@ -1,0 +1,9 @@
+
+    db_name: "mydatabase"
+    db_user: "db_user"
+    db_password: "db_user"
+    backup_file: "/tmp/mydatabase.sql"
+    restore_file: "/tmp/mydatabase.sql"
+    restore_db_name: "databese_restored"
+    restore_db_user: "db_user2"
+    restore_db_password: "db_user"
