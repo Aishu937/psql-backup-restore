@@ -1,0 +1,17 @@
+- name: Create database user and database
+      become: true
+      postgresql_user:
+        db: "{{ db_name }}"
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        login_user: postgres
+        login_password: postgres
+        login_host: localhost
+        login_unix_socket: /var/run/postgresql
+      postgresql_db:
+        name: "{{ db_name }}"
+        owner: "{{ db_user }}"
+        login_user: postgres
+        login_password: postgres
+        login_host: localhost
+        login_unix_socket: /var/run/postgresql
