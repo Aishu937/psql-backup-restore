@@ -12,6 +12,4 @@
         src: "{{ backup_file }}"
         dest: "{{ backup_file }}"
         remote_src: true
-
       notify: Restore database on another server
-      
