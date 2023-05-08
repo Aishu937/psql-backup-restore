@@ -13,14 +13,14 @@
         password: "{{ db_password }}"
         login_user: postgres
         login_password: postgres
-        login_host: target1@192.168.1.31
+        login_host: localhost
         login_unix_socket: /var/run/postgresql
       postgresql_db:
         name: "{{ db_name }}"
         owner: "{{ db_user }}"
         login_user: postgres
         login_password: postgres
-        login_host: target1@192.168.1.31
+        login_host: localhost
         login_unix_socket: /var/run/postgresql
 
     - name: Take database backup
