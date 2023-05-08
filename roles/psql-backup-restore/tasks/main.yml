@@ -4,33 +4,7 @@
       apt:
         name: postgresql
         state: present
-    - name: Create database user and database
-      become: true
-      postgresql_user:
-        db: "{{ db_name }}"
-        name: "{{ db_user }}"
-        password: "{{ db_password }}"
-        login_user: postgres
-        login_password: postgres
-        login_host: localhost
-        login_unix_socket: /var/run/postgresql
-      postgresql_db:
-        name: "{{ db_name }}"
-        owner: "{{ db_user }}"
-        login_user: postgres
-        login_password: postgres
-        login_host: localhost
-        login_unix_socket: /var/run/postgresql
-
-    - name: Take database backup
-      become: true
-      postgresql_dump:
-        db: "{{ db_name }}"
-        login_user: "{{ db_user }}"
-        login_password: "{{ db_password }}"
-        login_host: target1@192.168.1.31
-        login_unix_socket: /var/run/postgresql
-        filename: "{{ backup_file }}"
+      notify: Create database user and database
         
     - name: Copy backup file to another server
       become: true
