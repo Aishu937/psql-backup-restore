@@ -13,27 +13,5 @@
         dest: "{{ backup_file }}"
         remote_src: true
 
-    - name: Restore database on another server
-      become: true
-      postgresql_user:
-        db: "{{ restore_db_name }}"
-        name: "{{ restore_db_user }}"
-        password: "{{ restore_db_password }}"
-        login_user: postgres
-        login_password: postgres
-        login_host: target1@192.168.1.31
-        login_unix_socket: /var/run/postgresql
-      postgresql_db:
-        name: "{{ restore_db_name }}"
-        owner: "{{ restore_db_user }}"
-        login_user: postgres
-        login_password: postgres
-        login_host: target1@192.168.1.31
-        login_unix_socket: /var/run/postgresql
-      postgresql_restore:
-        db: "{{ restore_db_name }}"
-        login_user: "{{ restore_db_user }}"
-        login_password: "{{ restore_db_password }}"
-        login_host: target1@192.168.1.31
-        login_unix_socket: /var/run/postgresql
-        filename: "{{ restore_file }}"
+      notify: Restore database on another server
+      
