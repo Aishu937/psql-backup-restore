@@ -4,7 +4,6 @@
       apt:
         name: postgresql
         state: present
-
     - name: Create database user and database
       become: true
       postgresql_user:
